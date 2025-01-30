@@ -1,0 +1,29 @@
+[
+    {
+    "id": "2240a509-5505-452f-86ac-455ed5464765",
+    "title": "Amalaya Malbec",
+    "description": "Vino tinto Malbec",
+    "code": "abc123",
+    "price": 7000,
+    "stock": 20,
+    "category": "vinos"
+    },
+    {
+    "id": "904027b4-9100-4fcd-8aab-3128604faf09",
+    "title": "Jameson",
+    "description": "jameson whisky stout edition",
+    "code": "abc123",
+    "price": 2000,
+    "stock": 20,
+    "category": "whisky"
+    },
+    {
+    "id": "957003eb-99f1-4b72-8dc1-591361e8dd70",
+    "title": "Patagonia",
+    "description": "Cerveza amber lager",
+    "code": "xyz789",
+    "price": 2888,
+    "stock": 50,
+    "category": "cervezas"
+    }
+]
