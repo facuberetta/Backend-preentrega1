@@ -11,13 +11,14 @@ class CartManager {
     async getCarts() {
         try {
             if (!fs.existsSync(this.path)) {
+                console.error(`File not found: ${this.path}`);
                 return [];
             }
 
             const carts = await fs.promises.readFile(this.path, 'utf-8');
             return JSON.parse(carts);
         } catch (error) {
-            throw new Error(`Error al obtener los carritos: ${error.message}`);
+            throw new Error(`Error retrieving carts from ${this.path}: ${error.message}`);
         }
     }
 
@@ -34,7 +35,7 @@ class CartManager {
             await fs.promises.writeFile(this.path, JSON.stringify(cartsFile, null, 2));
             return cart;
         } catch (error) {
-            throw new Error(`Error al crear el carrito: ${error.message}`);
+            throw new Error(`Error creating cart: ${error.message}`);
         }
     }
 
@@ -43,19 +44,19 @@ class CartManager {
             const carts = await this.getCarts();
             return carts.find(cart => cart.id === id) || null;
         } catch (error) {
-            throw new Error(`Error al obtener el carrito por ID: ${error.message}`);
+            throw new Error(`Error retrieving cart by ID from ${this.path}: ${error.message}`);
         }
     }
 
     async saveProdToCart(idCart, idProd) {
         try {
             const prodExists = await prodManager.getById(idProd);
-            if (!prodExists) throw new Error('El producto no existe');
+            if (!prodExists) throw new Error('Product does not exist');
 
             const cartsFile = await this.getCarts();
 
             const cartIndex = cartsFile.findIndex(cart => cart.id === idCart);
-            if (cartIndex === -1) throw new Error('El carrito no existe');
+            if (cartIndex === -1) throw new Error('Cart does not exist');
 
             const cart = cartsFile[cartIndex];
 
@@ -75,7 +76,7 @@ class CartManager {
 
             return cart;
         } catch (error) {
-            throw new Error(`Error al agregar producto al carrito: ${error.message}`);
+            throw new Error(`Error adding product to cart: ${error.message}`);
         }
     }
 }
