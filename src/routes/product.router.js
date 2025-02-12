@@ -62,6 +62,15 @@ router.delete("/:id", async (req, res) => {
         } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
+
+    router.get('/', (req, res) => {
+        res.render('home', { products });
+    });
+    
+    router.get('/realtimeproducts', (req, res) => {
+        res.render('realTimeProducts');
+    });
+
 });
 
 router.put("/:id", async (req, res) => {
