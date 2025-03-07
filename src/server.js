@@ -5,54 +5,65 @@ import path from 'path';
 import { Server } from "socket.io";
 import { createServer } from "http";
 import { fileURLToPath } from 'url';
+import mongoose from "mongoose";
+import Product from './models/product.model.js';
+import { engine } from 'express-handlebars';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = createServer(app);
-
-import { engine } from 'express-handlebars';  
 const io = new Server(server);
 
-app.get('/', (req, res) => {
-    res.render('home.handlebars');
-});
-app.use('/static', express.static(path.join(process.cwd(), "src", "public")));
+const MONGO_URI = 'mongodb://127.0.0.1:27017/ecommerce';
+mongoose.connect(MONGO_URI, {
+})
+.then(() => console.log('✅ Conectado a MongoDB'))
+.catch((error) => console.error('❌ Error al conectar a MongoDB:', error));
 
+// 📌 Middleware y rutas
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/products", productRouter);
-app.use("/realtimeproducts", productRouter);
-
 app.use("/api/carts", cartRouter);
+app.use('/static', express.static(path.join(__dirname, "src", "public")));
 
-server.listen(8080, () => {
-    console.log("Server is running on port 8080");
-});
-
+// 📌 Configurar Handlebars
 app.engine("handlebars", engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
-let products = [];
 
+app.get('/testMongo', async (req, res) => {
+    try {
+        const nuevoProducto = await Product.create({
+            title: "Producto de prueba",
+            description: "Este es un producto de prueba",
+            price: 100,
+            category: "Tecnología",
+            stock: 10
+        });
+        res.send(nuevoProducto);
+    } catch (error) {
+        res.status(500).send("Error al guardar el producto");
+    }
+});
+
+// 📌 WebSockets
 io.on("connection", (socket) => {
     console.log("Nuevo cliente conectado");
-    socket.emit("updateProducts", products);
-
-
 
     socket.on('addProduct', (product) => {
-        products.push(product);
-        io.emit('updateProducts', products);
+        io.emit('updateProducts', product);
     });
 
     socket.on('deleteProduct', (id) => {
-        products = products.filter((p) => p.id !== id);
-        io.emit('updateProducts', products);
+        io.emit('updateProducts', id);
     });
+});
 
-
-
+// 📌 Iniciar el servidor
+server.listen(8080, () => {
+    console.log("🚀 Server is running on port 8080");
 });
