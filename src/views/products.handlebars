@@ -1,0 +1,44 @@
+<h1>Lista de Productos</h1>
+
+<table>
+    <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Categoría</th>
+        <th>Acciones</th>
+    </tr>
+    {{#each products}}
+    <tr>
+        <td>{{this.title}}</td>
+        <td>${{this.price}}</td>
+        <td>{{this.category}}</td>
+        <td>
+            <a href="/products/{{this._id}}">Ver Detalles</a>
+            <button onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
+        </td>
+    </tr>
+    {{/each}}
+</table>
+
+<!-- Paginación -->
+<div>
+    {{#if prevPage}}
+        <a href="{{prevPage}}">Anterior</a>
+    {{/if}}
+    Página {{currentPage}} de {{totalPages}}
+    {{#if nextPage}}
+        <a href="{{nextPage}}">Siguiente</a>
+    {{/if}}
+</div>
+
+<script>
+    function addToCart(productId) {
+        fetch(`/api/carts/1/products/${productId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+        })
+        .then(response => response.json())
+        .then(data => alert("Producto agregado al carrito"))
+        .catch(error => console.error("Error:", error));
+    }
+</script>
