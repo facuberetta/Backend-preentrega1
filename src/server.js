@@ -8,6 +8,11 @@ import { fileURLToPath } from 'url';
 import mongoose from "mongoose";
 import Product from './models/product.model.js';
 import { engine } from 'express-handlebars';
+import User from './models/user.js';
+import userRouter from "./routes/user.router.js";
+
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use('/static', express.static(path.join(__dirname, "src", "public")));
+app.use("/api/users", userRouter);
 
 // 📌 Configurar Handlebars
 app.engine("handlebars", engine());
