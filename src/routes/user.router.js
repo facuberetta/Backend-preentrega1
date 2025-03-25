@@ -7,14 +7,15 @@ import {
     deleteUser
 } from "./controllers/user.controller.js";
 import { authorize } from "../middlewares/auth.middleware.js";
+import passport from "passport";
 
 const router = express.Router();
 
-router.get("/", authorize(["admin"]), getUsers);
-router.get("/", getUsers);           
-router.get("/:id", authorize(["admin", "user"]), getUserById);      
-router.post("/", createUser);        
-router.put("/:id", authorize(["admin", "user"]), updateUser);      
-router.delete("/:id", authorize(["admin"]), deleteUser);  
+router.get("/", passport.authenticate("jwt", { session: false }), authorize(["admin"]), getUsers);
+router.get("/:id", passport.authenticate("jwt", { session: false }), authorize(["admin", "user"]), getUserById);
+router.put("/:id", passport.authenticate("jwt", { session: false }), authorize(["admin", "user"]), updateUser);
+router.post("/", passport.authenticate("jwt", { session: false }), authorize(["admin"]), createUser);        
+router.delete("/:id", passport.authenticate("jwt", { session: false }), authorize(["admin"]), deleteUser);     
+
 
 export default router;

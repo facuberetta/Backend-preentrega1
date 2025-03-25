@@ -10,6 +10,8 @@ import Product from './models/product.model.js';
 import { engine } from 'express-handlebars';
 import User from './models/user.js';
 import userRouter from "./routes/user.router.js";
+import passport from "passport";
+import "./config/passport.js"
 
 
 
@@ -27,15 +29,17 @@ mongoose.connect(MONGO_URI, {
 .then(() => console.log('✅ Conectado a MongoDB'))
 .catch((error) => console.error('❌ Error al conectar a MongoDB:', error));
 
-// 📌 Middleware y rutas
+// Middleware y rutas
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use('/static', express.static(path.join(__dirname, "src", "public")));
 app.use("/api/users", userRouter);
+app.use(passport.initialize());
 
-// 📌 Configurar Handlebars
+
+// Configurar Handlebars
 app.engine("handlebars", engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
@@ -56,7 +60,7 @@ app.get('/testMongo', async (req, res) => {
     }
 });
 
-// 📌 WebSockets
+// WebSockets
 io.on("connection", (socket) => {
     console.log("Nuevo cliente conectado");
 
@@ -69,7 +73,7 @@ io.on("connection", (socket) => {
     });
 });
 
-// 📌 Iniciar el servidor
+// Iniciar el servidor
 server.listen(8080, () => {
     console.log("🚀 Server is running on port 8080");
 });
