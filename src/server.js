@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 import mongoose from "mongoose";
 import Product from './models/product.model.js';
 import { engine } from 'express-handlebars';
-import User from './models/user.js';
+import { User } from './models/user.js';
 import userRouter from "./routes/user.router.js";
 import passport from "passport";
 import "./config/passport.js"

@@ -5,7 +5,7 @@ import {
     createUser,
     updateUser,
     deleteUser
-} from "./controllers/user.controller.js";
+} from "../Controllers/user.controller.js";
 import { authorize } from "../middlewares/auth.middleware.js";
 import passport from "passport";
 
